@@ -1,6 +1,7 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import fs from 'fs';
 import path from 'path';
+import { SendMessageCommand, SQSClient } from "@aws-sdk/client-sqs";
 
 const MAX_ID_LENGTH = 5;
 
@@ -57,4 +58,18 @@ export const upload_file_to_s3 = async (file_name: string, file_path: string): P
     console.error("Error uploading file: ", error);
     throw error;
   }
+};
+
+const client = new SQSClient({});
+const SQS_QUEUE_URL = process.env.AWS_SQS_URL as string;
+
+export const publish_sqs_message = async (message_body: string) => {
+  const command = new SendMessageCommand({
+    QueueUrl: SQS_QUEUE_URL,
+    MessageBody: message_body,
+  });
+
+  const response = await client.send(command);
+  console.log("Message sent. ID:", response);
+  return response;
 };
