@@ -14,5 +14,8 @@
     "w": "bun --watch src/server.ts",
     "b": "bun build src/server.ts --outdir ./build",
     "s": "bun --smol run src/server.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.637.0"
   }
 }
