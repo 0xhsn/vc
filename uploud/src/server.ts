@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import simpleGit from "simple-git";
-import { generate_deployment_id, list_all_repo_files, upload_file_to_s3 } from "./utils";
+import { generate_deployment_id, list_all_repo_files, upload_file_to_s3, publish_sqs_message } from "./utils";
 
 const app = express();
 app.use(cors());
@@ -9,6 +9,7 @@ app.use(express.json());
 console.log("AWS Region:", process.env.AWS_REGION);
 console.log("AWS Access Key ID:", process.env.AWS_ACCESS_KEY_ID);
 console.log("S3 Bucket Name:", process.env.AWS_BUCKET_NAME);
+console.log("SQS Queue URL:", process.env.AWS_SQS_URL);
 
 app.post("/deploy", async (req, res) => {
   const repo_url = req.body.repo_url;
@@ -28,7 +29,7 @@ app.post("/deploy", async (req, res) => {
     })
   );
 
-
+  await publish_sqs_message(deployment_id);
 
   res.json({
     id: deployment_id,
