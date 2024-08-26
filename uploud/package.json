@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "aws-sdk": "^2.1682.0",
     "cors": "^2.8.5",
@@ -15,5 +16,12 @@
   "type": "module",
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "clean": "rm -rf build && echo 'Done.'",
+    "dev": "bun src/server.ts",
+    "w": "bun --watch src/server.ts",
+    "b": "bun build src/server.ts --outdir ./build",
+    "s": "bun --smol run src/server.ts"
   }
 }
