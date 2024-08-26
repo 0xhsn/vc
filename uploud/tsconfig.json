@@ -23,8 +23,5 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
-
-    "rootDir": "./src",
-    "outDir": "./build", 
   }
 }
