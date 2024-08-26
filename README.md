@@ -9,6 +9,8 @@ Vercel clone to understand the build and deployment phases.
 ## API
 
 - `/deploy`
+```shell
 curl -X POST http://localhost:3000/deploy \
      -H "Content-Type: application/json" \
      -d '{"repo_url": "<git-repo-url>"}'
+```
