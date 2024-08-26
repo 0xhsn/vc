@@ -1,8 +1,9 @@
 {
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.637.0",
+    "@aws-sdk/s3-request-presigner": "^3.637.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
-    "aws-sdk": "^2.1682.0",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "redis": "^4.7.0",
