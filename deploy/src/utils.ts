@@ -7,7 +7,7 @@ import {
   S3Client,
   ListObjectsV2Command,
   GetObjectCommand,
-  PutObjectCommand
+  PutObjectCommand,
 } from "@aws-sdk/client-s3";
 import fs from "fs";
 import path from "path";
@@ -40,7 +40,7 @@ export const subscribe_to_sqs_message = async (queueUrl = SQS_QUEUE_URL) => {
 
   const message = Messages[0];
 
-  console.log("Message Body:", message.Body); 
+  console.log("Message Body:", message.Body);
 
   let deployment_id;
 
@@ -57,7 +57,6 @@ export const subscribe_to_sqs_message = async (queueUrl = SQS_QUEUE_URL) => {
     return deployment_id;
   }
 };
-  
 
 export async function download_s3_directory(repo_name: string) {
   const baseOutputDir = path.join(__dirname, "builds", repo_name);
@@ -107,45 +106,47 @@ export async function download_s3_directory(repo_name: string) {
 
 // TODO: Implement the build_project function with containiraization
 export function build_project(id: string) {
-    return new Promise((resolve, reject) => {
-        const sanitizedId = path.basename(id);
+  return new Promise((resolve, reject) => {
+    const sanitizedId = path.basename(id);
 
-        const projectPath = path.join(__dirname, 'builds', sanitizedId);
+    const projectPath = path.join(__dirname, "builds", sanitizedId);
 
-        const child = spawn('npm', ['install'], { cwd: projectPath });
+    const child = spawn("npm", ["install"], { cwd: projectPath });
 
-        child.stdout?.on('data', (data) => {
-            console.log('stdout: ' + data);
-        });
-
-        child.stderr?.on('data', (data) => {
-            console.error('stderr: ' + data);
-        });
-
-        child.on('close', (code) => {
-            if (code !== 0) {
-                return reject(new Error(`Build process exited with code ${code}`));
-            }
-
-            const buildChild = spawn('npm', ['run', 'build'], { cwd: projectPath });
-
-            buildChild.stdout?.on('data', (data) => {
-                console.log('stdout: ' + data);
-            });
-
-            buildChild.stderr?.on('data', (data) => {
-                console.error('stderr: ' + data);
-            });
-
-            buildChild.on('close', (buildCode) => {
-                if (buildCode !== 0) {
-                    return reject(new Error(`Build process exited with code ${buildCode}`));
-                }
-
-                resolve("");
-            });
-        });
+    child.stdout?.on("data", (data) => {
+      console.log("stdout: " + data);
     });
+
+    child.stderr?.on("data", (data) => {
+      console.error("stderr: " + data);
+    });
+
+    child.on("close", (code) => {
+      if (code !== 0) {
+        return reject(new Error(`Build process exited with code ${code}`));
+      }
+
+      const buildChild = spawn("npm", ["run", "build"], { cwd: projectPath });
+
+      buildChild.stdout?.on("data", (data) => {
+        console.log("stdout: " + data);
+      });
+
+      buildChild.stderr?.on("data", (data) => {
+        console.error("stderr: " + data);
+      });
+
+      buildChild.on("close", (buildCode) => {
+        if (buildCode !== 0) {
+          return reject(
+            new Error(`Build process exited with code ${buildCode}`)
+          );
+        }
+
+        resolve("");
+      });
+    });
+  });
 }
 
 export const list_all_repo_files = async (deployment_id: string) => {
@@ -170,7 +171,10 @@ export const list_all_repo_files = async (deployment_id: string) => {
   return walk(directory);
 };
 
-export const upload_file_to_s3 = async (file_name: string, file_path: string): Promise<string> => {
+export const upload_file_to_s3 = async (
+  file_name: string,
+  file_path: string
+): Promise<string> => {
   try {
     const s3 = new S3Client({
       region: process.env.AWS_REGION,
@@ -184,13 +188,15 @@ export const upload_file_to_s3 = async (file_name: string, file_path: string): P
 
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME as string,
-      Key: `builds/${file_name}`, 
+      Key: `builds/${file_name}`,
       Body: file_content,
     };
 
     await s3.send(new PutObjectCommand(params));
 
-    console.log(`File uploaded successfully. Location: ${params.Bucket}/${params.Key}`);
+    console.log(
+      `File uploaded successfully. Location: ${params.Bucket}/${params.Key}`
+    );
     return `https://${params.Bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`;
   } catch (error) {
     console.error("Error uploading file: ", error);
@@ -198,15 +204,14 @@ export const upload_file_to_s3 = async (file_name: string, file_path: string): P
   }
 };
 
-
 export async function copy_final_build(id: string) {
   // const folderPath = path.join(__dirname, `builds/${id}/build`);
   const files = await list_all_repo_files(`${id}/build`);
 
   files.map(async (file: string) => {
     const file_name = file.slice(__dirname.length + 8);
-    console.log('file_name:', file_name);
+    console.log("file_name:", file_name);
     const s3_url = await upload_file_to_s3(file_name, file);
     return s3_url;
-  })
+  });
 }
