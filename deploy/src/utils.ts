@@ -2,7 +2,6 @@ import {
   ReceiveMessageCommand,
   DeleteMessageCommand,
   SQSClient,
-  DeleteMessageBatchCommand,
 } from "@aws-sdk/client-sqs";
 import {
   S3Client,
