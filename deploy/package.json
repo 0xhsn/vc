@@ -9,7 +9,7 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "clean": "rm -rf build&& echo 'Done.'",
+    "clean": "rm -rf build && rm -rf src/builds && echo 'Done.'",
     "dev": "bun src/server.ts",
     "w": "bun --watch src/server.ts",
     "b": "bun build src/server.ts --outdir ./build",
