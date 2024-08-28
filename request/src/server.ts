@@ -7,7 +7,7 @@ let fileContentsCache: { [key: string]: string } | null = null;
 
 const initializeFiles = async () => {
   try {
-    fileContentsCache = await download_s3_directory('yh31n'); // TODO: Replace with the correct repo name
+    fileContentsCache = await download_s3_directory("yh31n"); // TODO: Replace with the correct repo name
   } catch (error) {
     console.error("Failed to download files:", error);
     fileContentsCache = {};

@@ -1,6 +1,5 @@
 import { integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 
-// Define the deployments table
 export const deployments = pgTable('deployments', {
     id: serial('id').primaryKey(),
     projectId: text('project_id').notNull(),

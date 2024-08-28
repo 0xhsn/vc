@@ -10,6 +10,7 @@ import {
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { deployments } from "./schema";
+import { eq } from "drizzle-orm/expressions";
 
 const sql = neon(process.env.DRIZZLE_DATABASE_URL!);
 const db = drizzle(sql);
@@ -27,6 +28,7 @@ app.post("/deploy", async (req, res) => {
 
   const deployment_id = generate_deployment_id();
 
+  console.log("Cloning repository:", repo_url);
   await simpleGit().clone(repo_url, `./clones/${deployment_id}`);
 
   const files = await list_all_repo_files(deployment_id);
@@ -57,12 +59,33 @@ app.post("/deploy", async (req, res) => {
 
   addDeployment().catch(console.error);
 
+  app.get("/status", async (req, res) => {
+    const deployment_id = req.query.id as string;
+
+    const result = await db
+      .select({
+        status: deployments.status,
+      })
+      .from(deployments)
+      .where(eq(deployments.projectId, deployment_id));
+
+    if (result.length > 0) {
+      res.json({
+        status: result[0].status,
+      });
+    } else {
+      res.json({
+        status: "not found",
+      });
+    }
+  });
+
   res.json({
     id: deployment_id,
     urls: s3_urls,
   });
 });
 
-const port = 3000;
+const port = 4000;
 app.listen(port);
 console.log(`App is listening on port ${port}`);

@@ -1,6 +1,6 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 import { SendMessageCommand, SQSClient } from "@aws-sdk/client-sqs";
 
 const MAX_ID_LENGTH = 5;
@@ -31,7 +31,10 @@ export const list_all_repo_files = async (deployment_id: string) => {
   return walk(directory);
 };
 
-export const upload_file_to_s3 = async (file_name: string, file_path: string): Promise<string> => {
+export const upload_file_to_s3 = async (
+  file_name: string,
+  file_path: string
+): Promise<string> => {
   try {
     const s3 = new S3Client({
       region: process.env.AWS_REGION,
@@ -41,18 +44,19 @@ export const upload_file_to_s3 = async (file_name: string, file_path: string): P
       },
     });
 
-
     const file_content = fs.readFileSync(file_path);
 
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME as string,
-      Key: `clones/${file_name}`, 
+      Key: `clones/${file_name}`,
       Body: file_content,
     };
 
     await s3.send(new PutObjectCommand(params));
 
-    console.log(`File uploaded successfully. Location: ${params.Bucket}/${params.Key}`);
+    console.log(
+      `File uploaded successfully. Location: ${params.Bucket}/${params.Key}`
+    );
     return `https://${params.Bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`;
   } catch (error) {
     console.error("Error uploading file: ", error);
