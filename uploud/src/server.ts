@@ -2,6 +2,12 @@ import express from "express";
 import cors from "cors";
 import simpleGit from "simple-git";
 import { generate_deployment_id, list_all_repo_files, upload_file_to_s3, publish_sqs_message } from "./utils";
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
+import { deployments } from './schema';
+
+const sql = neon(process.env.DRIZZLE_DATABASE_URL!);
+const db = drizzle(sql);
 
 const app = express();
 app.use(cors());
@@ -30,6 +36,18 @@ app.post("/deploy", async (req, res) => {
   );
 
   await publish_sqs_message(deployment_id);
+  async function addDeployment() {
+    const result = await db.insert(deployments).values({
+        projectId: deployment_id,
+        status: 'uploaded',
+    }).returning({
+        id: deployments.id,
+    });
+
+    console.log('Inserted deployment ID:', result[0].id);
+}
+
+addDeployment().catch(console.error);
 
   res.json({
     id: deployment_id,
