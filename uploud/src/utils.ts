@@ -46,7 +46,7 @@ export const upload_file_to_s3 = async (file_name: string, file_path: string): P
 
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME as string,
-      Key: file_name, 
+      Key: `clones/${file_name}`, 
       Body: file_content,
     };
 
