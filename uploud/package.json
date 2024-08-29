@@ -26,7 +26,7 @@
     "clean": "rm -rf build && rm -rf clones && echo 'Done.'",
     "dev": "bun src/server.ts",
     "w": "bun --watch src/server.ts",
-    "b": "bun build src/server.ts --outdir ./build",
+    "b": "bun build src/server.ts --outdir ./build --target node",
     "s": "bun --smol run src/server.ts"
   }
 }
