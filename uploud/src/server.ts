@@ -18,10 +18,6 @@ const db = drizzle(sql);
 const app = express();
 app.use(cors());
 app.use(express.json());
-console.log("AWS Region:", process.env.AWS_REGION);
-console.log("AWS Access Key ID:", process.env.AWS_ACCESS_KEY_ID);
-console.log("S3 Bucket Name:", process.env.AWS_BUCKET_NAME);
-console.log("SQS Queue URL:", process.env.AWS_SQS_URL);
 
 app.post("/deploy", async (req, res) => {
   const repo_url = req.body.repo_url;
