@@ -13,14 +13,12 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import axios from "axios";
 
-const BACKEND_UPLOAD_URL = "http://localhost:4000";
-
 export default function Home() {
   const [repoUrl, setRepoUrl] = useState("");
   const [uploadId, setUploadId] = useState("");
   const [uploading, setUploading] = useState(false);
   const [deployed, setDeployed] = useState(false);
-
+  console.log(process.env.BACKEND_UPLOAD_URL);
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <div className="z-10 w-full max-w-5xl flex flex-col items-center justify-center font-mono text-sm">
@@ -50,14 +48,14 @@ export default function Home() {
               <Button
                 onClick={async () => {
                   setUploading(true);
-                  const res = await axios.post(`${BACKEND_UPLOAD_URL}/deploy`, {
+                  const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_UPLOAD_URL}/deploy`, {
                     repo_url: repoUrl,
                   });
                   setUploadId(res.data.id);
                   setUploading(false);
                   const interval = setInterval(async () => {
                     const response = await axios.get(
-                      `${BACKEND_UPLOAD_URL}/status?id=${res.data.id}`
+                      `${process.env.BACKEND_UPLOAD_URL}/status?id=${res.data.id}`
                     );
 
                     if (response.data.status === "deployed") {
