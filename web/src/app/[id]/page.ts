@@ -1,7 +1,17 @@
 import { redirect } from 'next/navigation';
 
-export default function DynamicPage({ params }: { params: any }) {
-  const { id } = params;
+export async function getServerSideProps(context: { params: { id: any; }; }) {
+  const { id } = context.params;
 
-  redirect(`/${id}/`);
+  return {
+    redirect: {
+      destination: `/${id}/index.html`,
+      permanent: false, // Use a temporary redirect
+    },
+  };
+}
+
+export default function DynamicPage() {
+  // This component won't be rendered because of the redirect
+  return null;
 }
