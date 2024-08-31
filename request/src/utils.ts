@@ -5,7 +5,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { Readable } from "stream";
 
-const streamToString = async (stream: Readable): Promise<string> => {
+export const streamToString = async (stream: Readable): Promise<string> => {
   const chunks: any[] = [];
   for await (const chunk of stream) {
     chunks.push(chunk);
@@ -13,12 +13,12 @@ const streamToString = async (stream: Readable): Promise<string> => {
   return Buffer.concat(chunks).toString("utf-8");
 };
 
-const s3 = new S3Client({
+export const s3 = new S3Client({
   region: process.env.AWS_REGION,
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-  },
+  }, 
 });
 
 export async function download_s3_directory(repo_name: string) {
