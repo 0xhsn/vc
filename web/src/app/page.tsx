@@ -101,7 +101,7 @@ export default function Home() {
               </div>
               <Button className="w-full mt-4" variant="outline">
                 <a
-                  href={`https://vcbackend.macdoos.dev/${uploadId}`}
+                  href={`https://vcbackend.macdoos.dev/${uploadId}/index.html`}
                   target="_blank"
                 >
                   Visit Website
