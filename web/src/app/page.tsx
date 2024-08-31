@@ -95,13 +95,13 @@ export default function Home() {
                   id="deployed-url"
                   readOnly
                   type="url"
-                  value={`https://vc.macdoos.dev/${uploadId}`}
+                  value={`https://vcbackend.macdoos.dev/${uploadId}`}
                   className="w-full text-center"
                 />
               </div>
               <Button className="w-full mt-4" variant="outline">
                 <a
-                  href={`https://vc.macdoos.dev/${uploadId}`}
+                  href={`https://vcbackend.macdoos.dev/${uploadId}`}
                   target="_blank"
                 >
                   Visit Website
