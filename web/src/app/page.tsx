@@ -20,7 +20,7 @@ export default function Home() {
   const [deployed, setDeployed] = useState(false);
   console.log(process.env.BACKEND_UPLOAD_URL);
   return (
-    <main className="flex flex-col items-center justify-center p-10">
+    <main className="flex flex-col items-center justify-center pt-10">
       <div className="z-10 w-full max-w-xl flex flex-col items-center justify-center font-mono text-sm">
         <Card className="w-full max-w-md mb-8">
           <CardHeader className="text-center">
@@ -79,7 +79,7 @@ export default function Home() {
         </Card>
 
         {deployed && (
-          <Card className="w-full max-w-md mb-8">
+          <Card className="w-full sm:max-w-md mb-8">
             <CardHeader className="text-center">
               <CardTitle className="text-xl">Deployment Status</CardTitle>
               <CardDescription>
