@@ -108,9 +108,17 @@ export async function download_s3_directory(repo_name: string) {
 export function build_project(id: string) {
   return new Promise((resolve, reject) => {
     const sanitizedId = path.basename(id);
-
     const projectPath = path.join(__dirname, "builds", sanitizedId);
 
+    const packageJsonPath = path.join(projectPath, "package.json");
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
+
+    packageJson.homepage = `/${sanitizedId}`;
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+
+    console.log(`Set homepage to /${sanitizedId} in package.json`);
+
+    // Step 2: Install dependencies
     const child = spawn("npm", ["install"], { cwd: projectPath });
 
     child.stdout?.on("data", (data) => {
