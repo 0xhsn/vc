@@ -20,8 +20,8 @@ export default function Home() {
   const [deployed, setDeployed] = useState(false);
   console.log(process.env.BACKEND_UPLOAD_URL);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="z-10 w-full max-w-5xl flex flex-col items-center justify-center font-mono text-sm">
+    <main className="flex flex-col items-center justify-center p-10">
+      <div className="z-10 w-full max-w-xl flex flex-col items-center justify-center font-mono text-sm">
         <Card className="w-full max-w-md mb-8">
           <CardHeader className="text-center">
             <CardTitle className="text-xl">
