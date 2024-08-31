@@ -16,7 +16,14 @@ const sql = neon(process.env.DRIZZLE_DATABASE_URL!);
 const db = drizzle(sql);
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: 'https://vc.macdoos.dev',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
 app.use(express.json());
 
 app.post("/deploy", async (req, res) => {
@@ -55,31 +62,31 @@ app.post("/deploy", async (req, res) => {
 
   addDeployment().catch(console.error);
 
-  app.get("/status", async (req, res) => {
-    const deployment_id = req.query.id as string;
-
-    const result = await db
-      .select({
-        status: deployments.status,
-      })
-      .from(deployments)
-      .where(eq(deployments.projectId, deployment_id));
-
-    if (result.length > 0) {
-      res.json({
-        status: result[0].status,
-      });
-    } else {
-      res.json({
-        status: "not found",
-      });
-    }
-  });
-
   res.json({
     id: deployment_id,
     urls: s3_urls,
   });
+});
+
+app.get("/status", async (req, res) => {
+  const deployment_id = req.query.id as string;
+
+  const result = await db
+    .select({
+      status: deployments.status,
+    })
+    .from(deployments)
+    .where(eq(deployments.projectId, deployment_id));
+
+  if (result.length > 0) {
+    res.json({
+      status: result[0].status,
+    });
+  } else {
+    res.json({
+      status: "not found",
+    });
+  }
 });
 
 const port = 4000;
